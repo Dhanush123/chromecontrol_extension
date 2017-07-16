@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+
+  "name": "chrome-control",
+  "description": "This extension lets you use Google Assistant to browse the web hands-free",
+  "version": "2.0",
+  "short_name": "Chrome Control",
+
+  "icons":{ 
+    "16": "chromecontrol-ext16.png",
+    "48": "chromecontrol-ext48.png",
+    "128": "chromecontrol-ext128.png"
+  },
+
+  "permissions": ["bookmarks", "tabs", "activeTab", "identity", "webNavigation", "sessions","https://accounts.google.com/*", "https://www.googleapis.com/*"],
+
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkGYJFPZ9iDjjj238ePbRoM7MBjnHAUEaWBxEsbEiYFBZEt6DvxcAZscotUdd+m/PVZHWdoFwq6Kf238JBDNY7D1h06bqyfdHyljF/b6l1ojq7v1tIhy8Dne5wVpfzBUZb/fffjki30i5qCj9QVCUzI7pZDe3FqPoWaZpGP9V2fCznaqElYUmSb7wWcVqlef6J57ivr6wv19mNxM6n5JTkDljhSM/Vww9LnUG3X/J98OuAkPja+Wwd1TGQMiepsGQ7hQYty8YHOZeKjdhGtX2OKSWLenXD2+dEaHemEa4L/yMNT5Fj8wIyivBsLe0o4ddqYh5Tjvk0tG3xAIGkAb51wIDAQAB",
+
+  "oauth2": {
+    "client_id": "258067669794-15ia6lquc9nfr4js0d72abrtbhn2d67r.apps.googleusercontent.com",
+    "scopes": [      
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+      ]
+  },
+
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  },
+
+  "content_scripts": [{
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["actions.js"]
+  }],
+
+  "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+}
