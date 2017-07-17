@@ -3,9 +3,6 @@ var image;
 var timer;
 var userID;
 var height;
-// var googleQuery;
-// var stackoverflowQuery;
-// var youtubeQuery;
 var synth = window.speechSynthesis;
 var utterThis = new SpeechSynthesisUtterance("I'm sorry, I don't understand that request. Please try again later or try a different request.");
 
@@ -18,18 +15,6 @@ chrome.runtime.onMessage.addListener(
       height = request.height;
       console.log("height is: " + height);
     }
-    // if (typeof request.googleQuery !== "undefined"){
-    //   googleQuery = request.googleQuery;
-    //   console.log("googleQuery is: " + googleQuery);
-    // }
-    // if (typeof request.stackoverflowQuery !== "undefined"){
-    //   stackoverflowQuery = request.stackoverflowQuery;
-    //   console.log("stackoverflowQuery is: " + stackoverflowQuery);
-    // }
-    // if (typeof request.youtubeQuery !== "undefined"){
-    //   youtubeQuery = request.youtubeQuery;
-    //   console.log("youtubeQuery is: " + youtubeQuery);
-    // }
     selectIntent(data);
   }
 );
@@ -39,13 +24,8 @@ var intentFuncMap = {
   "scroll_up_full": scrollUpFull,
   "scroll_down": scrollDown,
   "scroll_down_full": scrollDownFull,
-  // "new_tab": newTab,
-  // "google_search": googleSearch,
-  // "stackoverflow_search": stackoverflowSearch,
-  // "youtube_search": youtubeSearch,
   "go_back": goBack,
   "go_forward": goForward,
-  // "close_tab": closeTab,
 };
 
 function scrollUp() {
@@ -69,44 +49,18 @@ function scrollDown() {
   window.scrollBy(window.scrollY, height/2);
   chrome.runtime.sendMessage({"actions" : "scrollDown", "userID" : userID}, function (response) {
       console.log("scrollDown response: " + response);
+      console.log("sD new position: " + window.scrollY);
   });
 }
 
 function scrollDownFull() {
   console.log("I'm trying to scroll down full");
-  window.scrollTo(window.scrollY, height);
+  window.scrollTo(window.scrollY, document.body.scrollHeight);
   chrome.runtime.sendMessage({"actions" : "scrollDownFull", "userID" : userID}, function (response) {
       console.log("scrollDownFull response: " + response);
+      console.log("sDF new position: " + window.scrollY);
   });
 }
-
-// function newTab() {
-//   console.log("I'm trying to new tab");
-//   chrome.runtime.sendMessage({"actions" : "newTab", "userID" : userID}, function (response) {
-//       console.log("newTab response: " + response);
-//   });
-// }
-
-// function googleSearch() {
-//   console.log("I'm trying to google search");
-//   chrome.runtime.sendMessage({"actions" : "googleSearch", "userID" : userID, "googleQuery" : googleQuery}, function (response) {
-//       console.log("googleSearch response: " + response);
-//   }); 
-// }
-
-// function stackoverflowSearch() {
-//   console.log("I'm trying to stackoverflow search");
-//   chrome.runtime.sendMessage({"actions" : "stackoverflowSearch", "userID" : userID, "stackoverflowQuery" : stackoverflowQuery}, function (response) {
-//       console.log("stackoverflowSearch response: " + response);
-//   }); 
-// }
-
-// function youtubeSearch() {
-//   console.log("I'm trying to youtube search");
-//   chrome.runtime.sendMessage({"actions" : "youtubeSearch", "userID" : userID, "youtubeQuery" : youtubeQuery}, function (response) {
-//       console.log("youtubeSearch response: " + response);
-//   }); 
-// }
 
 function goBack() {
   console.log("I'm trying to go back");
@@ -123,13 +77,6 @@ function goForward() {
       console.log("goForward response: " + response);
   });
 }
-
-// function closeTab() {
-//   console.log("I'm trying to close tab");
-//   chrome.runtime.sendMessage({"actions" : "closeTab", "userID" : userID}, function (response) {
-//       console.log("closeTab response: " + response);
-//   });
-// };
 
 function selectIntent(data) {
   console.log("inside selectIntent!!!");

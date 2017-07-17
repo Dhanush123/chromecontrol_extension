@@ -95,19 +95,19 @@ function onUserInfoFetched(error, status, response) {
                 fbCmdReset(userInfo.id);
                 console.log("youtube_search request completed!");
               });
-              // fbYoutubeReset(userInfo.id);
               break;
             case "zoom":
               chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
                 chrome.tabs.getZoom(tabs[0].id, function(zoomFactor) {
-                  if(s.val().zoomType == "reset" || (zoomType == "out" && (zoomFactor - 0.25) <= 0)){
+                  var zoomType = s.val().zoomType;
+                  if(zoomType == "reset" || (zoomType == "out" && (zoomFactor - 0.25) <= 0)){
                     zoomChange = 1.0;
                     console.log("zoomChange reset to 1.0 aka 100%");
                   }
                   else {
-                    var zoomChange = s.val().zoomType == "in" ? 0.25 + zoomFactor : zoomFactor - 0.25;
+                    var zoomChange = zoomType == "in" ? 0.25 + zoomFactor : zoomFactor - 0.25;
                   }
-                  console.log("zoomType is: " + s.val().zoomType);
+                  console.log("zoomType is: " + zoomType);
                   console.log("changing from " + zoomFactor + " --> " + zoomChange);
                   chrome.tabs.setZoom(tabs[0].id, zoomChange, function(){
                     console.log("done zooming now!!!");
@@ -128,24 +128,26 @@ function onUserInfoFetched(error, status, response) {
               chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
                 var title = tabs[0].title;
                 var url = tabs[0].url;
-//                chrome.bookmarks.getTree(function(results){
-//                  console.log(JSON.stringify(results));
-//                });
                 chrome.bookmarks.search("Chrome Control", function(results){
                   if(!results.length){
                     chrome.bookmarks.create({"parentId": "1", "title": "Chrome Control"},
                       function(newFolder) {
                         console.log("added folder: " + newFolder.title);
-                        addUrlToBookmarks(newFolder.id, title, url);
+                        addUrlToBookmarks(newFolder.id, title, url, userInfo.id);
                     });
                   }
                   else {
-                    for(var Node in results){
-                      if(Node.title == "Chrome Control"){
-                        addUrlToBookmarks(Node.id, title, url);
-                      }
-                    }
+                    console.log("bookmark results: " + JSON.stringify(results));
+                    console.log("Found bookmark folder!!! " + results[0].id);
+                    addUrlToBookmarks(results[0].id, title, url, userInfo.id);
                   }
+                });
+              });
+              break;
+            case "reload_page":
+              chrome.tabs.query({ lastFocusedWindow: true, active: true }, function (tabs) {
+                chrome.tabs.reload(tabs[0].id, function(){
+                  console.log("reload_page request completed!");
                 });
               });
               break;
@@ -164,10 +166,13 @@ function onUserInfoFetched(error, status, response) {
     else {
      console.log("Error:", error);
     }
-} 
+}
 
-function addUrlToBookmarks(id, title, url){
-  chrome.bookmarks.create({"parentId": id, "title": title, "url": url });
+function addUrlToBookmarks(id, title, url, userID){
+  chrome.bookmarks.create({"parentId": id, "title": title, "url": url},
+  function(result){
+    fbCmdReset(userID);
+  });
 }
 
 function fbCmdReset(userID){
