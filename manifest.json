@@ -7,9 +7,9 @@
   "short_name": "Chrome Control",
 
   "icons":{ 
-    "16": "chromecontrol-ext16.png",
-    "48": "chromecontrol-ext48.png",
-    "128": "chromecontrol-ext128.png"
+    "16": "chromecontrol-cext-16.png",
+    "48": "chromecontrol-cext-48.png",
+    "128": "chromecontrol-cext-128.png"
   },
 
   "permissions": ["bookmarks", "tabs", "activeTab", "identity", "webNavigation", "sessions","https://accounts.google.com/*", "https://www.googleapis.com/*"],
