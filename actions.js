@@ -92,7 +92,7 @@ function showLinks() {
   for(var i = 0; i < links.length; i++) {
     array.push(links[i].href);
     console.log("link " + i + " on page: " + array[i]);
-    links[i].innerHTML = "<mark>Link " + i + "</mark>";
+    links[i].innerHTML = "<mark>Link " + i + ":</mark> " + links[i].innerHTML;
     links[i].setAttribute("id", i);
   }
   chrome.runtime.sendMessage({"actions" : "showLinks", "userID" : userID}, function (response) {
