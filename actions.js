@@ -3,6 +3,7 @@ var image;
 var timer;
 var userID;
 var height;
+var linkNumber;
 var synth = window.speechSynthesis;
 var utterThis = new SpeechSynthesisUtterance("I'm sorry, I don't understand that request. Please try again later or try a different request.");
 
@@ -15,6 +16,10 @@ chrome.runtime.onMessage.addListener(
       height = request.height;
       console.log("height is: " + height);
     }
+    if (typeof request.linkNumber !== "undefined"){
+      linkNumber = request.linkNumber;
+      console.log("linkNumber is: " + linkNumber);
+    }
     selectIntent(data);
   }
 );
@@ -26,6 +31,8 @@ var intentFuncMap = {
   "scroll_down_full": scrollDownFull,
   "go_back": goBack,
   "go_forward": goForward,
+  "show_links": showLinks,
+  "open_link": openLink
 };
 
 function scrollUp() {
@@ -75,6 +82,31 @@ function goForward() {
   window.history.forward();
   chrome.runtime.sendMessage({"actions" : "goForward", "userID" : userID}, function (response) {
       console.log("goForward response: " + response);
+  });
+}
+
+function showLinks() {
+  console.log("I'm trying to show links");
+  var array = [];
+  var links = document.getElementsByTagName("a");
+  for(var i = 0; i < links.length; i++) {
+    array.push(links[i].href);
+    console.log("link " + i + " on page: " + array[i]);
+    links[i].innerHTML = "<mark>Link " + i + "</mark>";
+    links[i].setAttribute("id", i);
+  }
+  chrome.runtime.sendMessage({"actions" : "showLinks", "userID" : userID}, function (response) {
+      console.log("showLinks response: " + response);
+  });
+}
+
+function openLink() {
+  console.log("I'm trying to open link");
+  var link = document.getElementById(linkNumber);
+  console.log(JSON.stringify(link));
+  window.location.href = link;
+  chrome.runtime.sendMessage({"actions" : "openLink", "userID" : userID}, function (response) {
+      console.log("openLink response: " + JSON.stringify(response));
   });
 }
 

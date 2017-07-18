@@ -146,14 +146,53 @@ function onUserInfoFetched(error, status, response) {
               break;
             case "reload_page":
               chrome.tabs.query({ lastFocusedWindow: true, active: true }, function (tabs) {
-                chrome.tabs.reload(tabs[0].id, function(){
+                fbCmdReset(userInfo.id);
+                chrome.tabs.reload(tabs[0].id, { bypassCache: true }, function(){
                   console.log("reload_page request completed!");
                 });
               });
               break;
+            case "remove_links":
+              chrome.tabs.query({lastFocusedWindow: true, active: true }, function (tabs) {
+                fbCmdReset(userInfo.id);
+                chrome.tabs.reload(tabs[0].id, { bypassCache: false }, function(){
+                  console.log("remove_links request completed!");
+                });
+              });
+              break;
+            case "close_window":
+              fbCmdReset(userInfo.id);
+              if(s.val().windowType == "current"){
+                chrome.windows.getLastFocused(function(window){
+                  chrome.windows.remove(window.id, function(){
+                    console.log("close_window request completed! (single window)");
+                  });
+                });
+              }
+              else {
+                chrome.windows.getAll(function(windows){
+                  console.log("windows: " + JSON.stringify(windows));
+                  var i;
+                  for(i = 0; i < windows.length; i++){
+                    chrome.windows.remove(windows[i]["id"], function(){
+                      console.log("close_window request completed! (multiple windows)");
+                    });
+                  }
+                });
+              }
+              break;
+            case "restore_window":
+              fbCmdReset(userInfo.id);
+              chrome.sessions.restore(function(restoredSession){
+                console.log("restore_window request completed!");
+              });
+            break;
             default:
               chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
                 var params = { data: s.val().command, userID: userInfo.id, height: tabs[0].height};
+                if(s.val().command == "open_link"){
+                  params.linkNumber = s.val().linkNumber;
+                }
                 chrome.tabs.sendMessage(tabs[0].id, params, function (response) {
                   console.log("response: "+JSON.stringify(response));
                 });
