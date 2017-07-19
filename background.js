@@ -118,6 +118,9 @@ function onUserInfoFetched(error, status, response) {
               break;
             case "website_search":
               var websiteUrl = !s.val().websiteUrl.includes("http") ? "http://" + s.val().websiteUrl : s.val().websiteUrl;
+              if(websiteUrl.includes("..")){
+                websiteUrl = websiteUrl.replace("..",".");
+              }
               chrome.tabs.create({url: websiteUrl}, function(tab){
                 fbCmdReset(userInfo.id);
                 console.log("website_search request completed!");
@@ -222,11 +225,11 @@ function fbCmdReset(userID){
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
+    fbCmdReset(request.userID);
     console.log("hi!!!!");
     console.log("background.js request: " + JSON.stringify(request));
     console.log("background.js sender: " + JSON.stringify(sender));
     if(request !== undefined){
-      fbCmdReset(request.userID);
       sendResponse({response: "got " + request.actions + " request!"});
       console.log("got " + request.actions + " request!");
     }
