@@ -55,7 +55,7 @@ function ongUserFetched(error, status, response) {
         console.log("checking if user already exists in firebase...");
         if(!s.val().hasOwnProperty(gUser.id)){
           console.log("user doesn't exist, creating now...");
-          firebase.database().ref("users/"+userID).set({
+          firebase.database().ref("users/"+gUser.id).set({
             username: gUser.displayName,
             email: gUser.emails[0].value,
             chromeLoggedIn: true,
