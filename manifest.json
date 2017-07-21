@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
 
-  "name": "chrome-control",
+  "name": "Browser Control",
   "description": "This extension lets you use Google Assistant to browse the web hands-free",
   "version": "3.1.2",
-  "short_name": "Chrome Control",
+  "short_name": "Browser Control",
 
   "icons":{
-    "16": "chromecontrol-cext-16.png",
-    "48": "chromecontrol-cext-48.png",
-    "128": "chromecontrol-cext-128.png"
+    "16": "browsercontrol-cext-16.png",
+    "48": "browsercontrol-cext-48.png",
+    "128": "browsercontrol-cext-128.png"
   },
 
   "permissions": ["bookmarks", "tabs", "activeTab", "identity", "webNavigation", "sessions","https://accounts.google.com/*", "https://www.googleapis.com/*"],
