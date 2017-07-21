@@ -79,12 +79,10 @@ function existingUserMonitor(gUser) {
   firebase.database().ref("users/"+gUser.id).update({
     "chromeLoggedIn": true
   });
-  // alert("User info: "+response);
   firebase.database().ref("users/"+gUser.id).on("value", function (s) {
     console.log("s: " + JSON.stringify(s));
     if (s.val().command != "reset") {
       var cmd = s.val().command;
-      // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       switch(cmd){
         case "new_tab":
           chrome.tabs.create({url: "http://google.com"},function(tab){

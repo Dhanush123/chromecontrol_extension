@@ -3,7 +3,7 @@
 
   "name": "chrome-control",
   "description": "This extension lets you use Google Assistant to browse the web hands-free",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "short_name": "Chrome Control",
 
   "icons":{
