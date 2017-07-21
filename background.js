@@ -153,9 +153,9 @@ function existingUserMonitor(gUser) {
           chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
             var title = tabs[0].title;
             var url = tabs[0].url;
-            chrome.bookmarks.search("Chrome Control", function(results){
+            chrome.bookmarks.search("Browser Control", function(results){
               if(!results.length){
-                chrome.bookmarks.create({"parentId": "1", "title": "Chrome Control"},
+                chrome.bookmarks.create({"parentId": "1", "title": "Browser Control"},
                   function(newFolder) {
                     console.log("added folder: " + newFolder.title);
                     addUrlToBookmarks(newFolder.id, title, url, gUser.id);
