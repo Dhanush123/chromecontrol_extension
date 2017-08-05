@@ -97,27 +97,42 @@ function existingUserMonitor(gUser) {
             console.log("close_tab request completed!");
           });
           break;
-        case "google_search":
-          var gUrl = "http://google.com/#q=" + s.val().googleQuery.split(" ").join("+");
-          chrome.tabs.create({url: gUrl}, function(tab){
-            fbCmdReset(gUser.id);
-            console.log("google_search request completed!");
+        //--- new code for sites_search
+        case "sites_search":
+          var site =  s.val().siteName || "google";
+          var query = s.val().siteQuery || "current weather";
+          var url = "";
+          switch (site){
+            case "quora":
+              url = "https://www.quora.com/search?q=";
+              break;
+            case "amazon":
+              url = "https://www.amazon.com/s/field-keywords";
+              break;
+            case "facebook":
+              url = "https://www.facebook.com/search/top/?q=";
+              break;
+            case "twitter":
+              url = "https://twitter.com/search?q=";
+              break;
+            case "google":
+              url = "http://google.com/#q=";
+              break;
+            case "stackoverflow":
+              url = "https://stackoverflow.com/search?q=";
+              break;
+            case "youtube":
+              url = "https://www.youtube.com/results?search_query=";
+              break;
+            default:
+          }
+          url += query;
+          chrome.tabs.create({url: url}, function(tab){
+              fbCmdReset(gUser.id);
+              console.log("sites_search request completed!");
           });
           break;
-        case "stackoverflow_search":
-          var soUrl = "https://stackoverflow.com/search?q=" + s.val().stackoverflowQuery.split(" ").join("+");
-          chrome.tabs.create({url: soUrl}, function(tab){
-            fbCmdReset(gUser.id);
-            console.log("stackoverflow_search request completed!");
-          });
-          break;
-        case "youtube_search":
-          var yUrl = "https://www.youtube.com/results?search_query=" + s.val().youtubeQuery.split(" ").join("+");
-          chrome.tabs.create({url: yUrl}, function(tab){
-            fbCmdReset(gUser.id);
-            console.log("youtube_search request completed!");
-          });
-          break;
+        //--- end new code
         case "zoom":
           chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
             chrome.tabs.getZoom(tabs[0].id, function(zoomFactor) {
