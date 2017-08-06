@@ -233,26 +233,12 @@ function existingUserMonitor(gUser) {
           });
         break;
         case "mute_tab":
-          var current = s.val().muteType == "current";
-          var params = {
-            lastFocusedWindow: true
-          };
-          var length = 1;
-          if(current){
-            params.active = true;
-          }
-          chrome.tabs.query(params, function(tabs) {
-            if(current){
-              length = tabs.length;
-            }
-            for(var i = 0; i < length; i++){
-              chrome.tabs.update(tabs[i].id, {
-                muted: true
-              }, function() {
-                console.log("mute_tab request completed!");
-              });
-            }
-          });
+          fbCmdReset(gUser.id);
+          muteManipulate(s.val().command,s.val().muteType);
+          break;
+        case "unmute_tab":
+          fbCmdReset(gUser.id);
+          muteManipulate(s.val().command,s.val().muteType);
           break;
         default:
           chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -267,6 +253,30 @@ function existingUserMonitor(gUser) {
         }
       }
     });
+}
+
+function muteManipulate(muteIntent, muteType) {
+  var current = (muteType == "current");
+  var windowParams = {
+    lastFocusedWindow: true
+  };
+  var length = 1;
+  if(current){
+    windowParams.active = true;
+  }
+  chrome.tabs.query(windowParams, function(tabs) {
+    if(!current){
+      length = tabs.length;
+    }
+    var muteParams = {};
+    muteParams.muted = (muteIntent == "mute_tab");
+    console.log("mute tab length is: " + length);
+    for(var i = 0; i < length; i++){
+      chrome.tabs.update(tabs[i].id, muteParams, function() {
+        console.log("mute_tab request completed!");
+      });
+    }
+  });
 }
 
 function addUrlToBookmarks(id, title, url, userID){
