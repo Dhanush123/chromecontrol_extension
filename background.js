@@ -99,35 +99,40 @@ function existingUserMonitor(gUser) {
           break;
         //--- new code for sites_search
         case "sites_search":
-          var site =  s.val().siteName || "google";
+          var site =  s.val().siteName || "Google";
           var query = s.val().siteQuery || "current weather";
-          var url = "";
+          var sUrl;
+          console.log("site: " + site);
+          site = site.toLowerCase().replace(/\s/g, '');
           switch (site){
-            case "Quora":
-              url = "https://www.quora.com/search?q=";
+            case "quora":
+              sUrl = "https://www.quora.com/search?q=";
               break;
-            case "Amazon":
-              url = "https://www.amazon.com/s/field-keywords";
+            case "amazon":
+              sUrl = "https://www.amazon.com/s/field-keywords";
               break;
-            case "Facebook":
-              url = "https://www.facebook.com/search/top/?q=";
+            case "facebook":
+              sUrl = "https://www.facebook.com/search/top/?q=";
               break;
-            case "Twitter":
-              url = "https://twitter.com/search?q=";
+            case "twitter":
+              sUrl = "https://twitter.com/search?q=";
               break;
-            case "Google":
-              url = "http://google.com/#q=";
+            case "google":
+              sUrl = "http://google.com/#q=";
               break;
-            case "Stack Overflow":
-              url = "https://stackoverflow.com/search?q=";
+            case "stackoverflow":
+              sUrl = "https://stackoverflow.com/search?q=";
               break;
-            case "YouTube":
-              url = "https://www.youtube.com/results?search_query=";
+            case "youtube":
+              sUrl = "https://www.youtube.com/results?search_query=";
               break;
             default:
+            //nothing
           }
-          url += query;
-          chrome.tabs.create({url: url}, function(tab){
+          console.log("base url: " + sUrl);
+          sUrl = sUrl + query;
+          console.log("going to: " + sUrl);
+          chrome.tabs.create({url: sUrl}, function(tab){
               fbCmdReset(gUser.id);
               console.log("sites_search request completed!");
           });
