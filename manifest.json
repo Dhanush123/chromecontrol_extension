@@ -3,7 +3,7 @@
 
   "name": "Browser Control",
   "description": "This extension lets you use Google Assistant to browse the web hands-free",
-  "version": "3.2.2",
+  "version": "3.2.5",
   "short_name": "Browser Control",
 
   "icons":{
