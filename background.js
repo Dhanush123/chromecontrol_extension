@@ -232,6 +232,28 @@ function existingUserMonitor(gUser) {
             console.log("restore_window request completed!");
           });
         break;
+        case "mute_tab":
+          var current = s.val().muteType == "current";
+          var params = {
+            lastFocusedWindow: true
+          };
+          var length = 1;
+          if(current){
+            params.active = true;
+          }
+          chrome.tabs.query(params, function(tabs) {
+            if(current){
+              length = tabs.length;
+            }
+            for(var i = 0; i < length; i++){
+              chrome.tabs.update(tabs[i].id, {
+                muted: true
+              }, function() {
+                console.log("mute_tab request completed!");
+              });
+            }
+          });
+          break;
         default:
           chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
             var params = { data: s.val().command, userID: gUser.id, height: tabs[0].height};
