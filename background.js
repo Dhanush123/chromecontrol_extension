@@ -103,25 +103,25 @@ function existingUserMonitor(gUser) {
           var query = s.val().siteQuery || "current weather";
           var url = "";
           switch (site){
-            case "quora":
+            case "Quora":
               url = "https://www.quora.com/search?q=";
               break;
-            case "amazon":
+            case "Amazon":
               url = "https://www.amazon.com/s/field-keywords";
               break;
-            case "facebook":
+            case "Facebook":
               url = "https://www.facebook.com/search/top/?q=";
               break;
-            case "twitter":
+            case "Twitter":
               url = "https://twitter.com/search?q=";
               break;
-            case "google":
+            case "Google":
               url = "http://google.com/#q=";
               break;
-            case "stackoverflow":
+            case "Stack Overflow":
               url = "https://stackoverflow.com/search?q=";
               break;
-            case "youtube":
+            case "YouTube":
               url = "https://www.youtube.com/results?search_query=";
               break;
             default:
