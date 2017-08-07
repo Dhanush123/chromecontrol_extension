@@ -240,11 +240,29 @@ function existingUserMonitor(gUser) {
           fbCmdReset(gUser.id);
           muteManipulate(s.val().command,s.val().muteType);
           break;
+        //---
+        case "selective_tabclose":
+          chrome.tabs.query({
+            lastFocusedWindow: true,
+          }, function(tabs) {
+            var url = s.val().websiteUrl || "google.com";
+            for (var i = 0; i < tabs.length; i++) {
+              if (tabs[i].url.includes(url)){
+                chrome.tabs.remove(tabs[i].id);
+              }
+            }
+          });
+          break;
+        //---
         default:
           chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
             var params = { data: s.val().command, userID: gUser.id, height: tabs[0].height};
             if(s.val().command == "open_link"){
               params.linkNumber = s.val().linkNumber;
+            }
+            else if (s.val().command == "youtube_assist") {
+              params.youtubeStatus = s.val().youtubeStatus || "play";
+              params.youtubePos = s.val().youtubePos || -1;
             }
             chrome.tabs.sendMessage(tabs[0].id, params, function (response) {
               console.log("response: "+JSON.stringify(response));

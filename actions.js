@@ -4,6 +4,8 @@ var timer;
 var userID;
 var height;
 var linkNumber;
+var youtubeStatus;
+var youtubePos;
 var synth = window.speechSynthesis;
 var utterThis = new SpeechSynthesisUtterance("I'm sorry, I don't understand that request. Please try again later or try a different request.");
 
@@ -20,6 +22,12 @@ chrome.runtime.onMessage.addListener(
       linkNumber = request.linkNumber;
       console.log("linkNumber is: " + linkNumber);
     }
+    if (typeof request.data == "youtube_assist"){
+      youtubeStatus = request.youtubeStatus;
+      youtubePos = request.youtubePos;
+      console.log("youtubeStatus is: " + youtubeStatus);
+      console.log("youtubePos is: " + youtubePos);
+    }
     selectIntent(data);
   }
 );
@@ -32,7 +40,9 @@ var intentFuncMap = {
   "go_back": goBack,
   "go_forward": goForward,
   "show_links": showLinks,
-  "open_link": openLink
+  "open_link": openLink,
+  "invert_colors": invertColors,
+  "youtube_assist": youtubeAssist
 };
 
 function scrollUp() {
@@ -110,6 +120,41 @@ function openLink() {
   });
 }
 
+function invertColors() {
+    (function () {
+      var css = 'html {-webkit-filter: invert(100%);' + '-moz-filter: invert(100%);' + '-o-filter: invert(100%);' + '-ms-filter: invert(100%); }';
+      var head = document.getElementsByTagName('head')[0];
+      var style = document.createElement('style');
+      if (!window.counter) {
+          window.counter = 1;
+      } else {
+          window.counter++;
+          if (window.counter % 2 == 0) {
+              var css = 'html {-webkit-filter: invert(0%); -moz-filter: invert(0%); -o-filter: invert(0%); -ms-filter: invert(0%); }'
+          }
+      }
+      style.type = 'text/css';
+      if (style.styleSheet) {
+          style.styleSheet.cssText = css;
+      } else {
+          style.appendChild(document.createTextNode(css));
+      }
+      head.appendChild(style);
+  }());
+  chrome.runtime.sendMessage({"actions" : "invertColors"}, function (response) {
+      console.log("invertColors response: " + JSON.stringify(response));
+  });
+}
+
+function youtubeAssist() {
+  if(youtubeStatus == "play" || youtubeStatus == "pause"){
+    document.getElementsByClassName('ytp-play-button')[0].click();
+  }
+  else if (youtubePos != -1) {
+    document.getElementById("video").currentTime = data.youtubePos;
+  }
+}
+
 function selectIntent(data) {
   console.log("inside selectIntent!!!");
   var foundFunction = false;
@@ -118,7 +163,7 @@ function selectIntent(data) {
     if (data == key) {
       console.log("found function! it is: " + key);
       foundFunction = true;
-      x = key
+      x = key;
       break;
     }
   }
