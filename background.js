@@ -242,6 +242,7 @@ function existingUserMonitor(gUser) {
           break;
         //---
         case "selective_tabclose":
+          fbCmdReset(gUser.id);
           chrome.tabs.query({
             lastFocusedWindow: true,
           }, function(tabs) {
@@ -261,8 +262,9 @@ function existingUserMonitor(gUser) {
               params.linkNumber = s.val().linkNumber;
             }
             else if (s.val().command == "youtube_assist") {
+              console.log("are gonna do youtube_assist!");
               params.youtubeStatus = s.val().youtubeStatus || "play";
-              params.youtubePos = s.val().youtubePos || -1;
+              // params.youtubePos = s.val().youtubePos || -1;
             }
             chrome.tabs.sendMessage(tabs[0].id, params, function (response) {
               console.log("response: "+JSON.stringify(response));

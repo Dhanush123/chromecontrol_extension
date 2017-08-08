@@ -5,7 +5,7 @@ var userID;
 var height;
 var linkNumber;
 var youtubeStatus;
-var youtubePos;
+// var youtubePos;
 var synth = window.speechSynthesis;
 var utterThis = new SpeechSynthesisUtterance("I'm sorry, I don't understand that request. Please try again later or try a different request.");
 
@@ -22,11 +22,11 @@ chrome.runtime.onMessage.addListener(
       linkNumber = request.linkNumber;
       console.log("linkNumber is: " + linkNumber);
     }
-    if (typeof request.data == "youtube_assist"){
+    if (request.data == "youtube_assist"){
       youtubeStatus = request.youtubeStatus;
-      youtubePos = request.youtubePos;
+      // youtubePos = request.youtubePos;
       console.log("youtubeStatus is: " + youtubeStatus);
-      console.log("youtubePos is: " + youtubePos);
+      // console.log("youtubePos is: " + youtubePos);
     }
     selectIntent(data);
   }
@@ -147,12 +147,16 @@ function invertColors() {
 }
 
 function youtubeAssist() {
+  console.log("in ya funct!!");
   if(youtubeStatus == "play" || youtubeStatus == "pause"){
     document.getElementsByClassName('ytp-play-button')[0].click();
   }
-  else if (youtubePos != -1) {
-    document.getElementById("video").currentTime = data.youtubePos;
-  }
+  // else if (youtubePos != -1) {
+  //   document.getElementById("youtube-video").seekTo(data.youtubePos,true);
+  // }
+  chrome.runtime.sendMessage({"actions" : "youtubeAssist"}, function (response) {
+      console.log("youtubeAssist response: " + JSON.stringify(response));
+  });
 }
 
 function selectIntent(data) {
