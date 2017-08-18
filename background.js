@@ -65,7 +65,7 @@ function ongUserFetched(error, status, response) {
           });
         }
         else {
-          console.log("user exist already, moving on...")
+          console.log("user exist already, moving on...");
           existingUserMonitor(gUser);
         }
       });
@@ -244,7 +244,7 @@ function existingUserMonitor(gUser) {
         case "selective_tabclose":
           fbCmdReset(gUser.id);
           chrome.tabs.query({
-            lastFocusedWindow: true,
+            lastFocusedWindow: true
           }, function(tabs) {
             var url = s.val().websiteUrl || "google.com";
             for (var i = 0; i < tabs.length; i++) {
